@@ -21,6 +21,38 @@ def formatSideOfEquation(side: list):
             formattedSide.append(molecule)
     return formattedSide
 
+# this function returns a matrix of chemical equation
+# example: a(KNO3) = b(KNO2) + c(O2)
+# K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        (1 -1  0)
+# N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   (1 -1  0)
+# O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        (3 -2 -2)
+def createMatrixOfChemEquation():
+    matrix = []
+    for element in elements:
+        row = []
+        
+        for i in range(len(equation)):
+            isInMolecule = False
+
+            for item in equation[i]:
+                if item[len(element):]:
+                    count = int(item[len(element):])
+                else:
+                    count = 1
+
+                item = item[:len(element)]
+                if element == item:
+                    if i >= len(left_side):
+                        count = -count
+                    row.append(count)
+                    isInMolecule = True
+                    
+            if not isInMolecule:
+                row.append(0)
+
+        matrix.append(row)
+    return matrix
+
 
 # ===== MAIN PROGRAM =====
 
@@ -39,54 +71,7 @@ with open('input/file.txt') as file:
                 if element not in elements:
                     elements.append(element)
 
-        matrix = []
-        for element in elements:
-            row = []
-
-            for i in range(len(left_side)):
-                isInMolecule = False
-                for item in equation[i]:
-
-                    if item[len(element):]:
-                        count = int(item[len(element):])
-                    else:
-                        count = 1
-                    item = item[:len(element)]
-
-                    if element == item:
-                        row.append(count)
-                        print(element, 'is in', equation[i])
-                        isInMolecule = True
-                        
-                if not isInMolecule:
-                    count = 0
-                    row.append(count)
-                    print(element, 'is not in', equation[i])
-
-
-            for i in range(len(left_side), len(left_side) + len(right_side)):
-                isInMolecule = False
-                for item in equation[i]:
-
-                    if item[len(element):]:
-                        count = int(item[len(element):])
-                    else:
-                        count = 1
-                    item = item[:len(element)]
-
-                    if element == item:
-                        row.append(-count)
-                        print(element, 'is in', equation[i])
-                        isInMolecule = True
-                        
-                if not isInMolecule:
-                    count = 0
-                    row.append(count)
-                    print(element, 'is not in', equation[i])
-
-            matrix.append(row)
-
-
+        matrix_of_equation = createMatrixOfChemEquation()
     
         print()
         
@@ -103,7 +88,7 @@ with open('input/file.txt') as file:
 
         print()
 
-        print(matrix)
+        print('Matrix:', matrix_of_equation)
 
         print()
 
