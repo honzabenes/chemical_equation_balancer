@@ -1,1 +1,2 @@
 KNO3 = KNO2 + O2
+Na + Cl2 = NaCl
