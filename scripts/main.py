@@ -44,30 +44,27 @@ def createMatrixOfChemEquation(equation: list, elements: list) -> list: # of lis
         row = []
         
         for i in range(len(equation)):
-            isInMolecule = False
+            count = 0
 
             for item in equation[i]:
-                if item[len(element):]:
-                    count = int(item[len(element):])
-                else:
-                    count = 1
+                if item.startswith(element):
+                    if item[len(element):]:
+                        count += int(item[len(element):])
+                    else:
+                        count += 1
 
-                item = item[:len(element)]
-                if element == item:
                     if i >= len(left_side):
                         count = -count
-                    row.append(count)
-                    isInMolecule = True
                     
-            if not isInMolecule:
-                row.append(0)
+            row.append(count)
 
         matrix.append(row)
     return matrix
 
     # def gauss(matrix):
         
-    #     def pivot(matrix):
+    #     def pivot(matrix, indexOfProblemRow):
+
 
 
 
