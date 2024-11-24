@@ -7,7 +7,7 @@ PATTERN_SPLIT_ELEMENTS = r'(?=\d)'
 
 # returns the list, which contains molecules of one of the sides in the given equation
 # example: ['Na', 'Cl2']
-def getSideOfEquation(side: str, equation: str) -> list:
+def getSideOfEquation(side: str, equation: str):
     if side == 'left':
         index = 0
     elif side == 'right':
@@ -16,7 +16,7 @@ def getSideOfEquation(side: str, equation: str) -> list:
 
 # returns the list, which contains molecules of one of the sides in the given equation, but each molecule is represented by another list, which contains elements of this molecule and their count
 # example: [['Na'], ['Cl2']]
-def formatSideOfEquation(side: list) -> list:
+def formatSideOfEquation(side: list):
     formattedSide = []
     for item in side:
             molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
@@ -38,7 +38,7 @@ def getElementsOfEquation(equation: list) -> list:
 # K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        (1 -1  0)
 # N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   (1 -1  0)
 # O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        (3 -2 -2)
-def createMatrixOfChemEquation(equation: list, elements: list) -> list: # list of lists (matrix)
+def createMatrixOfChemEquation(equation: list, elements: list):
     matrix = []
     for element in elements:
         row = []
@@ -66,7 +66,7 @@ def createMatrixOfChemEquation(equation: list, elements: list) -> list: # list o
 def gauss(matrix):
     
     # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
-    def pivot(problematicMatrix, indexOfDiagonalZero):
+    def pivot(problematicMatrix, indexOfDiagonalZero: int):
         i = indexOfDiagonalZero + 1
         while (i < len(problematicMatrix)) and (problematicMatrix[i][indexOfDiagonalZero] == 0):
             i += 1
@@ -90,9 +90,23 @@ def gauss(matrix):
             factor = - matrix[j][row] / matrix[row][row]
             for column in range(row, len(matrix[0])):
                 matrix[j][column] += int(matrix[row][column] * factor)
-        
+    
+    if len(matrix) > 2:
+        matrix.pop()
     return matrix
 
+# returns the roots of the system of equations (stoichiometric coefficients) in the list
+def backSubst(upperTriangularMatrix):
+    width = len(upperTriangularMatrix[0])
+    height = len(upperTriangularMatrix)
+    roots = [0] * width
+    roots[width - 1] = 1
+    for i in range(height - 1, -1, -1):
+        sum = 0
+        for j in range(width - 1, i, -1):
+            sum += upperTriangularMatrix[i][j] * roots[j]
+        roots[i] = -sum / upperTriangularMatrix[i][i]
+    return roots
 
 
 # ===== MAIN PROGRAM =====
@@ -127,7 +141,12 @@ with open('input/file.txt') as file:
 
         print()
 
-        print('Matrix after Gauss:', gauss(matrix_of_equation))
+        afterGauss = gauss(matrix_of_equation)
+        print('Matrix after Gauss:', afterGauss)
+
+        print()
+
+        print('roots:', backSubst(afterGauss))
 
         print()
 
