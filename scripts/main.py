@@ -66,22 +66,24 @@ def createMatrixOfChemEquation(equation: list, elements: list) -> list: # list o
 def gauss(matrix):
     
     # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
-    def pivot(matrix, indexOfDiagonalZero):
+    def pivot(problematicMatrix, indexOfDiagonalZero):
         i = indexOfDiagonalZero + 1
-        while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
+        while (i < len(problematicMatrix)) and (problematicMatrix[i][indexOfDiagonalZero] == 0):
             i += 1
-        if i == len(matrix):
+        if i == len(problematicMatrix):
             return False
         else:
-            matrix[indexOfDiagonalZero], matrix[i] = matrix[i], matrix[indexOfDiagonalZero]
-            return matrix
+            pivottedMatrix = problematicMatrix
+            pivottedMatrix[indexOfDiagonalZero], pivottedMatrix[i] = pivottedMatrix[i], pivottedMatrix[indexOfDiagonalZero]
+            return pivottedMatrix
 
     # BODY of the gauss funciton
     for row in range(len(matrix)):
 
         # reason for "row < len(matrix) - 1": when solving chemical equation, one zero-line always appears, the "pivot" function makes it the last row of the matrix
         if (matrix[row][row] == 0) and (row < len(matrix) - 1):
-            if pivot(matrix, row) == False:
+            matrix = pivot(matrix, row)
+            if not matrix:
                 return False
             
         for j in range(row + 1, len(matrix)):
