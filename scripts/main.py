@@ -24,7 +24,7 @@ def formatSideOfEquation(side: list) -> list:
     return formattedSide
 
 # returns the list of all elements which appears in the given equation
-def getElementsOfEquation(equation) -> list:
+def getElementsOfEquation(equation: list) -> list:
     elements = []
     for molecule in equation:
         for element in molecule:
@@ -33,12 +33,12 @@ def getElementsOfEquation(equation) -> list:
                 elements.append(element)
     return elements
 
-# this function returns a matrix of chemical equation
+# returns a matrix of chemical equation
 # example: a(KNO3) = b(KNO2) + c(O2)
 # K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        (1 -1  0)
 # N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   (1 -1  0)
 # O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        (3 -2 -2)
-def createMatrixOfChemEquation(equation: list, elements: list) -> list: # of lists (matrix)
+def createMatrixOfChemEquation(equation: list, elements: list) -> list: # list of lists (matrix)
     matrix = []
     for element in elements:
         row = []
@@ -59,12 +59,37 @@ def createMatrixOfChemEquation(equation: list, elements: list) -> list: # of lis
             row.append(count)
 
         matrix.append(row)
+
     return matrix
 
-    # def gauss(matrix):
-        
-    #     def pivot(matrix, indexOfProblemRow):
+# modifies the given matrix and returns the upper triangular matrix using Gaussian elimination
+def gauss(matrix):
+    
+    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
+    def pivot(matrix, indexOfDiagonalZero):
+        i = indexOfDiagonalZero + 1
+        while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
+            i += 1
+        if i == len(matrix):
+            return False
+        else:
+            matrix[indexOfDiagonalZero], matrix[i] = matrix[i], matrix[indexOfDiagonalZero]
+            return matrix
 
+    # BODY of the gauss funciton
+    for row in range(len(matrix)):
+
+        # reason for "row < len(matrix) - 1": when solving chemical equation, one zero-line always appears, the "pivot" function makes it the last row of the matrix
+        if (matrix[row][row] == 0) and (row < len(matrix) - 1):
+            if pivot(matrix, row) == False:
+                return False
+            
+        for j in range(row + 1, len(matrix)):
+            factor = - matrix[j][row] / matrix[row][row]
+            for column in range(row, len(matrix[0])):
+                matrix[j][column] += int(matrix[row][column] * factor)
+        
+    return matrix
 
 
 
@@ -81,7 +106,7 @@ with open('input/file.txt') as file:
         matrix_of_equation = createMatrixOfChemEquation(equation, elements)
     
 
-        ### control prints ###
+        # ===== control prints =====
         print()
         print('LS formatted:', left_side)
         print('RS formatted:', right_side)
@@ -97,6 +122,10 @@ with open('input/file.txt') as file:
         print()
 
         print('Matrix:', matrix_of_equation)
+
+        print()
+
+        print('Matrix after Gauss:', gauss(matrix_of_equation))
 
         print()
 
