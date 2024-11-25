@@ -89,12 +89,12 @@ def gauss(matrix):
         for j in range(row + 1, len(matrix)):
             factor = - matrix[j][row] / matrix[row][row]
             for column in range(row, len(matrix[0])):
-                matrix[j][column] += int(matrix[row][column] * factor)
+                matrix[j][column] += matrix[row][column] * factor
     
-    if len(matrix) > 2:
+    while len(matrix) >= len(matrix[0]):
         matrix.pop()
     return matrix
-
+    
 # returns the roots of the system of equations (stoichiometric coefficients) in the list
 def backSubst(upperTriangularMatrix):
 
@@ -110,11 +110,18 @@ def backSubst(upperTriangularMatrix):
             
         roots[i] = -sum / upperTriangularMatrix[i][i]
 
-        # expanding roots to be whole numbers if they are not yet
-        if sum % upperTriangularMatrix[i][i] != 0:
-            for j in range(i, WIDTH):
-                roots[j] *= abs(upperTriangularMatrix[i][i])
-
+    # expanding roots to be whole numbers if they are not yet
+    for i in range(len(roots)):
+        counter = 1
+        root = roots[i]
+        while roots[i] % 1 != 0:
+            roots[i] += root
+            counter += 1
+        if counter > 1:
+            for k in range(len(roots)):
+                if k != i:
+                    roots[k] *= counter
+        
         roots[i] = int(roots[i])
 
     return roots
@@ -134,7 +141,8 @@ with open('input/file.txt') as file:
         elements = getElementsOfEquation(equation)
         matrix_of_equation = createMatrixOfChemEquation(equation, elements)
 
-        roots = backSubst(gauss(matrix_of_equation))
+        gaussMatrix = gauss(matrix_of_equation)
+        roots = backSubst(gaussMatrix)
 
         output_line = ''
         for i in range(len(equation)):

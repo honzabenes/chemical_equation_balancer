@@ -1,3 +1,9 @@
-C6H5SO3H + NaOH = C6H5ONa + Na2SO3 + H2O
-Na + Cl2 = NaCl
-KNO3 = KNO2 + O2
+C3H8 + O2 = CO2 + H2O
+H2SO4 + NaOH = Na2SO4 + H2O
+Na + H2O = NaOH + H2
+CH4 + O2 = CO2 + H2O
+Fe + HCl = FeCl2 + H2
+H2O2 = H2O + O2
+Al + Cl2 = AlCl3
+S + O2 = SO2
+CO2 + NaOH = Na2CO3 + H2O
