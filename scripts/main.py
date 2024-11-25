@@ -98,46 +98,31 @@ def gauss(matrix):
 # returns the roots of the system of equations (stoichiometric coefficients) in the list
 def backSubst(upperTriangularMatrix):
 
-    def nsn(list):
-        if len(list):
-            res = 1
-            for i in range(len(list)):
-                res *= list[i]
-            return res
-        else:
-            return 0
-
-    # BODY of the backSubst function
-    width = len(upperTriangularMatrix[0])
-    height = len(upperTriangularMatrix)
-    roots = [0] * width
-    roots[width - 1] = 1
-    denominators = []
-    for i in range(height - 1, -1, -1):
+    WIDTH = len(upperTriangularMatrix[0])
+    HEIGHT = len(upperTriangularMatrix)
+    roots = [0] * WIDTH
+    roots[WIDTH - 1] = 1
+    for i in range(HEIGHT - 1, -1, -1):
         sum = 0
 
-        for j in range(width - 1, i, -1):
+        for j in range(WIDTH - 1, i, -1):
             sum += upperTriangularMatrix[i][j] * roots[j]
-
-        if sum % upperTriangularMatrix[i][i] != 0:
-            denominators.append(abs(upperTriangularMatrix[i][i]))
+            
         roots[i] = -sum / upperTriangularMatrix[i][i]
 
-    # expanding roots to be whole numbers if they are not yet
-    if len(denominators) > 0:
-        factor = nsn(denominators)
-        for i in range(len(roots)):
-            roots[i] *= factor
+        # expanding roots to be whole numbers if they are not yet
+        if sum % upperTriangularMatrix[i][i] != 0:
+            for j in range(i, WIDTH):
+                roots[j] *= abs(upperTriangularMatrix[i][i])
 
-    print(denominators)
-    print(nsn(denominators))
-
-    for i in range(len(roots)):
         roots[i] = int(roots[i])
+
     return roots
 
 
 # ===== MAIN PROGRAM =====
+
+output_lines = []
 
 with open('input/file.txt') as file:
     for line in file:
@@ -148,33 +133,28 @@ with open('input/file.txt') as file:
         equation = left_side + right_side
         elements = getElementsOfEquation(equation)
         matrix_of_equation = createMatrixOfChemEquation(equation, elements)
-    
+
+        roots = backSubst(gauss(matrix_of_equation))
+
+        output_line = []
+        for i in range(len(equation)):
+            if roots[i] > 1:
+                molecule = str(roots[i])
+            else:
+                molecule = ''
+            for j in range(len(equation[i])):
+                molecule += equation[i][j]
+            output_line.append(molecule)
 
         # ===== control prints =====
-        # print()
-        # print('LS formatted:', left_side)
-        # print('RS formatted:', right_side)
+        # print('roots:', roots)
+        # print(equation)
+        print(output_line)
+        
 
-        # print()
 
-        # print('Equation:', equation)
+print(output_lines)
+# OUTPUT
+# with open('ouput/file.txt', 'w') as file:
 
-        # print()
-
-        # print('Elements:', elements)
-
-        # print()
-
-        # print('Matrix:', matrix_of_equation)
-
-        print()
-
-        afterGauss = gauss(matrix_of_equation)
-        print('Matrix after Gauss:', afterGauss)
-
-        print()
-
-        print('roots:', backSubst(afterGauss))
-
-        print()
 
