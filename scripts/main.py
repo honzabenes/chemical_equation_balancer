@@ -97,15 +97,43 @@ def gauss(matrix):
 
 # returns the roots of the system of equations (stoichiometric coefficients) in the list
 def backSubst(upperTriangularMatrix):
+
+    def nsn(list):
+        if len(list):
+            res = 1
+            for i in range(len(list)):
+                res *= list[i]
+            return res
+        else:
+            return 0
+
+    # BODY of the backSubst function
     width = len(upperTriangularMatrix[0])
     height = len(upperTriangularMatrix)
     roots = [0] * width
     roots[width - 1] = 1
+    denominators = []
     for i in range(height - 1, -1, -1):
         sum = 0
+
         for j in range(width - 1, i, -1):
             sum += upperTriangularMatrix[i][j] * roots[j]
+
+        if sum % upperTriangularMatrix[i][i] != 0:
+            denominators.append(abs(upperTriangularMatrix[i][i]))
         roots[i] = -sum / upperTriangularMatrix[i][i]
+
+    # expanding roots to be whole numbers if they are not yet
+    if len(denominators) > 0:
+        factor = nsn(denominators)
+        for i in range(len(roots)):
+            roots[i] *= factor
+
+    print(denominators)
+    print(nsn(denominators))
+
+    for i in range(len(roots)):
+        roots[i] = int(roots[i])
     return roots
 
 
@@ -123,21 +151,21 @@ with open('input/file.txt') as file:
     
 
         # ===== control prints =====
-        print()
-        print('LS formatted:', left_side)
-        print('RS formatted:', right_side)
+        # print()
+        # print('LS formatted:', left_side)
+        # print('RS formatted:', right_side)
 
-        print()
+        # print()
 
-        print('Equation:', equation)
+        # print('Equation:', equation)
 
-        print()
+        # print()
 
-        print('Elements:', elements)
+        # print('Elements:', elements)
 
-        print()
+        # print()
 
-        print('Matrix:', matrix_of_equation)
+        # print('Matrix:', matrix_of_equation)
 
         print()
 
