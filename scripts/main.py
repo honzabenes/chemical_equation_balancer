@@ -166,4 +166,5 @@ with open('input/file.txt') as file:
 # ===== OUTPUT =====
 with open('output/file.txt', 'w') as file:
     file.writelines(output_lines)
+    
 
