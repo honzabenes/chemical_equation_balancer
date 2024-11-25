@@ -136,7 +136,7 @@ with open('input/file.txt') as file:
 
         roots = backSubst(gauss(matrix_of_equation))
 
-        output_line = []
+        output_line = ''
         for i in range(len(equation)):
             if roots[i] > 1:
                 molecule = str(roots[i])
@@ -144,17 +144,18 @@ with open('input/file.txt') as file:
                 molecule = ''
             for j in range(len(equation[i])):
                 molecule += equation[i][j]
-            output_line.append(molecule)
 
-        # ===== control prints =====
-        # print('roots:', roots)
-        # print(equation)
-        print(output_line)
-        
+            output_line += molecule
+            if (i != len(left_side) - 1) and (i < len(equation) - 1):
+                output_line += ' + '
+            elif i < len(equation) - 1:
+                output_line += ' = '
 
+        output_line += '\n'
 
-print(output_lines)
-# OUTPUT
-# with open('ouput/file.txt', 'w') as file:
+        output_lines.append(output_line)
 
+# ===== OUTPUT =====
+with open('output/file.txt', 'w') as file:
+    file.writelines(output_lines)
 
