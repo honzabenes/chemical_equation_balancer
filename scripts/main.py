@@ -109,18 +109,17 @@ def backSubst(upperTriangularMatrix):
             sum += upperTriangularMatrix[i][j] * roots[j]
             
         roots[i] = -sum / upperTriangularMatrix[i][i]
-
-    # expanding roots to be whole numbers if they are not yet
-    for i in range(len(roots)):
-        counter = 1
+    
+        # expanding roots to be whole numbers if they are not yet
+        factor = 1
         root = roots[i]
         while roots[i] % 1 != 0:
             roots[i] += root
-            counter += 1
-        if counter > 1:
-            for k in range(len(roots)):
-                if k != i:
-                    roots[k] *= counter
+            factor += 1
+        if factor > 1:
+            for j in range(i + 1, len(roots)):
+                if j != i:
+                    roots[j] *= factor
         
         roots[i] = int(roots[i])
 
