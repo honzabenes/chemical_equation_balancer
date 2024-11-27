@@ -1,4 +1,4 @@
-# Dokumentace k Python projektu
+# Program pro výpočet stechiometrických koeficientů
 
 Tento projekt je určen pro výpočet stechiometrických koeficientů chemických rovnic na základě vstupních dat. Projekt se skládá ze tří souborů: `app.py`, `calcStoichCoeff.py` a `main.py`.
 
