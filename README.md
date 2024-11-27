@@ -53,6 +53,7 @@ Do souboru `input/file.txt` vložte chemické rovnice v následujícím formátu
 Příkaz pro spuštění:
 ```bash
 python main.py
+```
 
 ### 3. Výstup
 Výsledky budou uloženy do souboru output/file.txt ve formátu: 2Na + Cl2 = 2NaCl
