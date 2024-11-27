@@ -35,3 +35,5 @@ C + O2 = CO
 Mg + O2 = MgO
 Fe + O2 = Fe2O3
 Al + Cl2 = AlCl3
+NaCl + H2SO4 = NaHSO4 + HCl
+NaHCO3 + HCl = NaCl + CO2 + H2O

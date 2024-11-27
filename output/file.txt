@@ -35,3 +35,5 @@ HCl + NaOH = NaCl + H2O
 2Mg + O2 = 2MgO
 4Fe + 3O2 = 2Fe2O3
 2Al + 3Cl2 = 2AlCl3
+NaCl + H2SO4 = NaHSO4 + HCl
+NaHCO3 + HCl = NaCl + CO2 + H2O

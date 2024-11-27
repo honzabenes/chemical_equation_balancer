@@ -55,7 +55,7 @@ def createMatrixOfChemEquation(equation: list, elements: list):
                 if item[:len(element)] == element:
                     if item[len(element):]:
                         # this if make sure, that the element is really the same as the item, for example Cl starts with C, but its not the same...
-                        if item[len(element)] not in lowerCaseAlphabet:
+                        if ord(item[len(element)]) not in lowerCaseAlphabet:
                             count += int(item[len(element):])
                     else:
                         count += 1
@@ -72,20 +72,21 @@ def createMatrixOfChemEquation(equation: list, elements: list):
 # modifies the given matrix and returns the upper triangular matrix using Gaussian elimination
 def gauss(matrix):
     
-    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
-    def pivot(problematicMatrix, indexOfDiagonalZero: int):
+    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False ("pMatrix" means pivotted matrix)
+    def pivot(matrix, indexOfDiagonalZero: int):
         i = indexOfDiagonalZero + 1
-        while (i < len(problematicMatrix)) and (problematicMatrix[i][indexOfDiagonalZero] == 0):
+        while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
             i += 1
-        if i == len(problematicMatrix):
+        if i == len(matrix):
             return False
         else:
-            pivottedMatrix = problematicMatrix
-            pivottedMatrix[indexOfDiagonalZero], pivottedMatrix[i] = pivottedMatrix[i], pivottedMatrix[indexOfDiagonalZero]
-            return pivottedMatrix
+            pMatrix = matrix
+            pMatrix[indexOfDiagonalZero], pMatrix[i] = pMatrix[i], pMatrix[indexOfDiagonalZero]
+            return pMatrix
 
     # BODY of the gauss funciton
-    for row in range(len(matrix) - 1):
+    # function iterates over the rows only for "matrix width - 1" because there is always one parameter (stoichiometric coefficient) in the roots of each matrix that represents a chemical equation, so such a system of equations can always be modified to a system of n equations with n + 1 variables.
+    for row in range(len(matrix[0]) - 1):
 
         if (matrix[row][row] == 0):
             matrix = pivot(matrix, row)
@@ -101,20 +102,20 @@ def gauss(matrix):
         matrix.pop()
     return matrix
     
-# returns the roots of the system of equations (stoichiometric coefficients) in the list
-def backSubst(upperTriangularMatrix):
+# returns the roots of the system of equations (stoichiometric coefficients) in the list ("UTMatrix" means upper triangular matrix)
+def backSubst(UTMatrix):
 
-    WIDTH = len(upperTriangularMatrix[0])
-    HEIGHT = len(upperTriangularMatrix)
+    WIDTH = len(UTMatrix[0])
+    HEIGHT = len(UTMatrix)
     roots = [0] * WIDTH
     roots[WIDTH - 1] = 1
     for i in range(HEIGHT - 1, -1, -1):
         sum = 0
 
         for j in range(WIDTH - 1, i, -1):
-            sum += upperTriangularMatrix[i][j] * roots[j]
+            sum += UTMatrix[i][j] * roots[j]
             
-        roots[i] = -sum / upperTriangularMatrix[i][i]
+        roots[i] = -sum / UTMatrix[i][i]
     
         # expanding roots to be whole numbers if they are not yet
         factor = 1
@@ -146,8 +147,8 @@ with open('input/file.txt') as file:
         elements = getElementsOfEquation(equation)
         matrix_of_equation = createMatrixOfChemEquation(equation, elements)
 
-        upperTriangularMatrixMatrix = gauss(matrix_of_equation)
-        roots = backSubst(upperTriangularMatrixMatrix)
+        ut_matrix = gauss(matrix_of_equation)
+        roots = backSubst(ut_matrix)
 
         output_line = ''
         for i in range(len(equation)):
