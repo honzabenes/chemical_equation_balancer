@@ -39,7 +39,12 @@ def getElementsOfEquation(equation: list) -> list:
 # N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   (1 -1  0)
 # O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        (3 -2 -2)
 def createMatrixOfChemEquation(equation: list, elements: list):
+    lowerCaseAlphabet = []
+    for i in range(97, 123):
+        lowerCaseAlphabet.append(i)
+
     matrix = []
+
     for element in elements:
         row = []
         
@@ -47,9 +52,11 @@ def createMatrixOfChemEquation(equation: list, elements: list):
             count = 0
 
             for item in equation[i]:
-                if item.startswith(element):
+                if item[:len(element)] == element:
                     if item[len(element):]:
-                        count += int(item[len(element):])
+                        # this if make sure, that the element is really the same as the item, for example Cl starts with C, but its not the same...
+                        if item[len(element)] not in lowerCaseAlphabet:
+                            count += int(item[len(element):])
                     else:
                         count += 1
 
@@ -78,10 +85,9 @@ def gauss(matrix):
             return pivottedMatrix
 
     # BODY of the gauss funciton
-    for row in range(len(matrix)):
+    for row in range(len(matrix) - 1):
 
-        # reason for "row < len(matrix) - 1": when solving chemical equation, one zero-line always appears, the "pivot" function makes it the last row of the matrix
-        if (matrix[row][row] == 0) and (row < len(matrix) - 1):
+        if (matrix[row][row] == 0):
             matrix = pivot(matrix, row)
             if not matrix:
                 return False
@@ -140,8 +146,8 @@ with open('input/file.txt') as file:
         elements = getElementsOfEquation(equation)
         matrix_of_equation = createMatrixOfChemEquation(equation, elements)
 
-        gaussMatrix = gauss(matrix_of_equation)
-        roots = backSubst(gaussMatrix)
+        upperTriangularMatrixMatrix = gauss(matrix_of_equation)
+        roots = backSubst(upperTriangularMatrixMatrix)
 
         output_line = ''
         for i in range(len(equation)):
