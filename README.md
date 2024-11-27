@@ -1,71 +1,61 @@
-# Chemical Equation Balancer
+# Dokumentace k Python projektu
 
-## Overview
-
-This program is designed to balance chemical equations by calculating the stoichiometric coefficients required to ensure the conservation of mass and atoms on both sides of the reaction. The input is a standard chemical equation, and the output includes formatted equations, a list of involved elements, and a matrix representation used for solving the equation.
+Tento projekt je určen pro výpočet stechiometrických koeficientů chemických rovnic na základě vstupních dat. Projekt se skládá ze tří souborů: `app.py`, `calcStoichCoeff.py` a `main.py`.
 
 ---
 
-## Features
-
-- **Input Parsing**: Splits the chemical equation into molecules and individual elements for analysis.
-- **Matrix Generation**: Constructs a coefficient matrix based on the presence and quantities of each element in the molecules.
-- **Equation Analysis**:
-  - Identifies unique elements present in the reaction.
-  - Separates molecules into reactants and products.
-- **Extensibility**: Code is structured to allow for additional functionality, like solving the matrix using Gaussian elimination.
+## Obsah
+1. [Hlavní soubory projektu](#hlavní-soubory-projektu)
+2. [Struktura souborů](#struktura-souborů)
+3. [Jak spustit projekt](#jak-spustit-projekt)
 
 ---
 
-## How It Works
+## Hlavní soubory projektu
 
-1. **Input**:
-   - A chemical equation (e.g., `KNO3 = KNO2 + O2`) is read from a file (`input/file.txt`).
+### 1. `app.py`
+Tento modul obsahuje základní funkce potřebné pro práci s chemickými rovnicemi:
+- **`getSideOfEquation`**: Rozdělí rovnici na levou a pravou stranu a vrátí seznam molekul.
+- **`formatSideOfEquation`**: Naformátuje molekuly do seznamu prvků a jejich počtu.
+- **`getElementsOfEquation`**: Získá všechny unikátní chemické prvky v rovnici.
+- **`createMatrixOfChemEquation`**: Vytvoří matici rovnice reprezentující výskyt prvků na levé a pravé straně.
+- **`gauss`**: Provádí Gaussovu eliminaci k vytvoření horní trojúhelníkové matice.
+- **`backSubst`**: Provádí zpětné dosazování k výpočtu stechiometrických koeficientů.
 
-2. **Processing**:
-   - The equation is split into reactants and products using the function `getSideOfEquation`.
-   - Molecules are broken down into individual elements and their counts using `formatSideOfEquation`.
-   - A matrix is generated representing the conservation of each element using `createMatrixOfChemEquation`.
+### 2. `calcStoichCoeff.py`
+Tento modul definuje funkci **`calcStoichCoeff`**, která:
+- Načítá vstupní chemické rovnice ze zadaného textového souboru.
+- Používá funkce z `app.py` pro zpracování rovnic a výpočet stechiometrických koeficientů.
+- Ukládá výsledky do výstupního textového souboru.
 
-3. **Output**:
-   - Lists of formatted reactants and products.
-   - A matrix representation of the equation for further computations.
-
----
-
-## Example
-
-**Input**:  
-`KNO3 = KNO2 + O2`
-
-**Output**:
-- Formatted Reactants: `[['K', 'N', 'O3']]`
-- Formatted Products: `[['K', 'N', 'O2'], ['O2']]`
-- Elements: `['K', 'N', 'O']`
-- Matrix: `[[1, -1, 0], [1, -1, 0], [3, -2, -2]]`
+### 3. `main.py`
+Hlavní spustitelný soubor projektu:
+- Definuje vstupní a výstupní soubor (např. `input/file.txt` a `output/file.txt`).
+- Volá funkci `calcStoichCoeff` z modulu `calcStoichCoeff.py`.
 
 ---
 
-## File Structure
-
-- **`main.py`**: Contains the main program logic.
-- **`input/file.txt`**: Input file with unbalanced chemical equations (one per line).
-
----
-
-## Future Development
-
-- **Matrix Solving**: Implement Gaussian elimination or other numerical methods to solve for stoichiometric coefficients.
-- **GUI Integration**: Build a user interface for easier input and visualization of balanced equations.
-- **Error Handling**: Add input validation for incorrectly formatted chemical equations.
+## Struktura souborů
+app.py # Obsahuje základní funkce pro práci s chemickými rovnicemi.
+calcStoichCoeff.py # Obsahuje funkci pro zpracování souborů s chemickými rovnicemi.
+main.py # Hlavní soubor spouštějící program.
+input/ # Složka s textovým souborem obsahujícím vstupní chemické rovnice. 
+output/ # Složka pro uložení výsledků.
 
 ---
 
-## Usage
+## Jak spustit projekt
 
-1. Place your chemical equations in `input/file.txt`, one equation per line.
-2. Run the program:
-3. View the outputs in the console.
+### 1. Vytvoření vstupního souboru
+Do souboru `input/file.txt` vložte chemické rovnice v následujícím formátu: Na + Cl2 = NaCl
+
+### 2. Spuštění programu
+Příkaz pro spuštění:
+```bash
+python main.py
+
+### 3. Výstup
+Výsledky budou uloženy do souboru output/file.txt ve formátu: 2Na + Cl2 = 2NaCl
 
 ---
 
