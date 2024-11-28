@@ -33,9 +33,12 @@ def calcStoichCoeff(IFile, OFile): # 'input/file.txt', 'output/file.txt'
                 elif i < len(equation) - 1:
                     output_line += ' = '
 
+            print(output_line)
+
             output_line += '\n'
 
             output_lines.append(output_line)
+
 
     # ===== OUTPUT =====
     with open(OFile, 'w') as file:

@@ -19,8 +19,8 @@ def getSideOfEquation(side: str, equation: str):
 def formatSideOfEquation(side: list):
     formattedSide = []
     for item in side:
-            molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
-            formattedSide.append(molecule)
+        molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
+        formattedSide.append(molecule)
     return formattedSide
 
 # returns the list of all elements which appears in the given equation
@@ -74,7 +74,7 @@ def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list
 # modifies the given matrix and returns the upper triangular matrix using Gaussian elimination
 def gauss(matrix):
     
-    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False ("pMatrix" means pivotted matrix)
+    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
     def pivot(matrix, indexOfDiagonalZero: int):
         i = indexOfDiagonalZero + 1
         while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
@@ -82,9 +82,8 @@ def gauss(matrix):
         if i == len(matrix):
             return False
         else:
-            pMatrix = matrix
-            pMatrix[indexOfDiagonalZero], pMatrix[i] = pMatrix[i], pMatrix[indexOfDiagonalZero]
-            return pMatrix
+            matrix[indexOfDiagonalZero], matrix[i] = matrix[i], matrix[indexOfDiagonalZero]
+            return matrix
 
     # BODY of the gauss funciton
     # function iterates over the rows only for "matrix width - 1" because there is always one parameter (stoichiometric coefficient) in the roots of each matrix that represents a chemical equation, so such a system of equations can always be modified to a system of n equations with n + 1 variables.
@@ -100,6 +99,7 @@ def gauss(matrix):
             for column in range(row, len(matrix[0])):
                 matrix[j][column] += matrix[row][column] * factor
     
+    # remove zero-lines
     while len(matrix) >= len(matrix[0]):
         matrix.pop()
     return matrix
@@ -112,11 +112,11 @@ def backSubst(UTMatrix):
     roots = [0] * WIDTH
     roots[WIDTH - 1] = 1
     for i in range(HEIGHT - 1, -1, -1):
-        sum = 0
 
+        # calculating roots
+        sum = 0
         for j in range(WIDTH - 1, i, -1):
             sum += UTMatrix[i][j] * roots[j]
-            
         roots[i] = -sum / UTMatrix[i][i]
     
         # expanding roots to be whole numbers if they are not yet
@@ -127,9 +127,7 @@ def backSubst(UTMatrix):
             factor += 1
         if factor > 1:
             for j in range(i + 1, len(roots)):
-                if j != i:
-                    roots[j] *= factor
-        
+                roots[j] *= factor
         roots[i] = int(roots[i])
 
     return roots
