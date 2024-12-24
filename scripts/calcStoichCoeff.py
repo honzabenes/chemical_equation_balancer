@@ -1,7 +1,8 @@
 
 import app
 
-def calcStoichCoeff(IFile, OFile): # 'input/file.txt', 'output/file.txt'
+def calcStoichCoeff(IFile, OFile):
+    '''Read chemical equations from the input file and write enumerated equations with stoichiometric coefficients into the output file.'''
     output_lines = []
 
     # ===== INPUT =====
@@ -32,8 +33,6 @@ def calcStoichCoeff(IFile, OFile): # 'input/file.txt', 'output/file.txt'
                     output_line += ' + '
                 elif i < len(equation) - 1:
                     output_line += ' = '
-
-            print(output_line)
 
             output_line += '\n'
 

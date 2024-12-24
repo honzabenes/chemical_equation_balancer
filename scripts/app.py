@@ -1,30 +1,44 @@
 
 import re
 
-# patterns for input parsing
+# patterns used for parsing the input
 PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
 PATTERN_SPLIT_ELEMENTS = r'(?=\d)'
 
-# returns the list, which contains molecules of one of the sides in the given equation
-# example: ['Na', 'Cl2']
-def getSideOfEquation(side: str, equation: str):
+def getSideOfEquation(side: str, equation: str) -> list:
+    '''Return list of strings, which contains all molecules from one side of the equation.
+    
+    example:
+
+    left side, NaCl + H2SO4 = NaHSO4 + HCl -> ['NaCl', 'H2SO4']
+    '''
     if side == 'left':
         index = 0
     elif side == 'right':
         index = 1
-    return [word.strip() for word in equation.split('=')[index].split('+')]
+    return [molecule.strip() for molecule in equation.split('=')[index].split('+')]
 
-# returns the list, which contains molecules of one of the sides in the given equation, but each molecule is represented by another list, which contains elements of this molecule and their count
-# example: [['Na'], ['Cl2']]
-def formatSideOfEquation(side: list):
+
+def formatSideOfEquation(side: list) -> list:
+    '''Format the given list containing all molecules from a side of the chemical equation represented as strings, so the molecules are represented as a string inside a list.
+    
+    example:
+
+    ['NaCl', 'H2SO4'] -> [['Na', 'Cl'], ['H2', 'S', 'O4']]
+    '''
     formattedSide = []
     for item in side:
         molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
         formattedSide.append(molecule)
     return formattedSide
 
-# returns the list of all elements which appears in the given equation
 def getElementsOfEquation(equation: list) -> list:
+    '''Return list containing elements, which appears in the equation.
+
+    example:
+
+    [['Na', 'Cl'], ['H2', 'S', 'O4'], ['Na', 'H', 'S', 'O4'], ['H', 'Cl']] -> ['Na', 'H', 'C', 'O', 'Cl']
+    '''
     elements = []
     for molecule in equation:
         for element in molecule:
@@ -33,12 +47,12 @@ def getElementsOfEquation(equation: list) -> list:
                 elements.append(element)
     return elements
 
-# returns a matrix of chemical equation
-# example: a(KNO3) = b(KNO2) + c(O2)
-# K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        (1 -1  0)
-# N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   (1 -1  0)
-# O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        (3 -2 -2)
-def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list):
+# explanation of how this function works: a(KNO3) = b(KNO2) + c(O2)
+# K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        [1 -1  0]
+# N: 1a = 1b + 0c   ==>   N: 1a - 1b - 0c = 0  ==>   [1 -1  0]
+# O: 3a = 2b + 2c         O: 3a - 2b - 2c = 0        [3 -2 -2]
+def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list) -> list:
+    '''Return matrix (list of lists) representing the chemical equation.'''
     equation = left_side + right_side
 
     lowerCaseAlphabet = []
@@ -71,11 +85,11 @@ def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list
 
     return matrix
 
-# modifies the given matrix and returns the upper triangular matrix using Gaussian elimination
-def gauss(matrix):
+def gauss(matrix) -> list:
+    '''Modify the matrix and return upper triangular matrix using Gaussian elimination.'''
     
-    # solves the problem when zero appears on the main diagonal and returns modified matrix if possible, if not, returns False
-    def pivot(matrix, indexOfDiagonalZero: int):
+    def pivot(matrix, indexOfDiagonalZero: int) -> list:
+        '''Try to swap rows of the matrix if a zero appears on the main diagonal, if not possible, return False.'''
         i = indexOfDiagonalZero + 1
         while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
             i += 1
@@ -104,8 +118,9 @@ def gauss(matrix):
         matrix.pop()
     return matrix
     
-# returns the roots of the system of equations (stoichiometric coefficients) in the list ("UTMatrix" means upper triangular matrix)
-def backSubst(UTMatrix):
+# UTMatrix stands for "Upper Triangular Matrix"
+def backSubst(UTMatrix) -> list:
+    '''Return roots of the system of equations.'''
 
     WIDTH = len(UTMatrix[0])
     HEIGHT = len(UTMatrix)
