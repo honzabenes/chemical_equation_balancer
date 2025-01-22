@@ -1,13 +1,9 @@
 
+# path in cmd: cd programovani\zapoctovy_program\chemistry\git_repo\zapoctovy_program> 
+# run command: cat input/file.txt | python scripts/main.py
+
 import calcStoichCoeff as csc
-    
-# ===== MAIN PROGRAM =====
 
-# input_file = 'input/file.txt'
-# output_file = 'output/file.txt'
-
-# input_file = input('input file: ')
-# output_file = input('output file: ')
-
-csc.calcStoichCoeff('input/file.txt', 'output/file.txt')
+if __name__ == '__main__':
+    csc.calcStoichCoeff('output/file.txt')
 

@@ -6,25 +6,28 @@ PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
 PATTERN_SPLIT_ELEMENTS = r'(?=\d)'
 
 def getSideOfEquation(side: str, equation: str) -> list:
-    '''Return list of strings, which contains all molecules from one side of the equation.
-    
-    example:
+    '''Return list of strings, which contains all molecules in the wanted side of the equation.
 
-    left side, NaCl + H2SO4 = NaHSO4 + HCl -> ['NaCl', 'H2SO4']
+    "Side" argument:
+    True if you want the function to return parsed left side, False if right.
+    
+    Example:
+
+    getSideOfEquation(True, NaCl + H2SO4 = NaHSO4 + HCl) -> ['NaCl', 'H2SO4']
     '''
-    if side == 'left':
+    if side == True:
         index = 0
-    elif side == 'right':
+    elif side == False:
         index = 1
     return [molecule.strip() for molecule in equation.split('=')[index].split('+')]
 
 
 def formatSideOfEquation(side: list) -> list:
-    '''Format the given list containing all molecules from a side of the chemical equation represented as strings, so the molecules are represented as a string inside a list.
+    '''Format the given list containing all molecules of the chemical equation side represented as strings, so each molecule is represented as a list of the single elements.
     
-    example:
+    Example:
 
-    ['NaCl', 'H2SO4'] -> [['Na', 'Cl'], ['H2', 'S', 'O4']]
+    formatSideOfEquation(['NaCl', 'H2SO4']) -> [['Na', 'Cl'], ['H2', 'S', 'O4']]
     '''
     formattedSide = []
     for item in side:
@@ -33,11 +36,11 @@ def formatSideOfEquation(side: list) -> list:
     return formattedSide
 
 def getElementsOfEquation(equation: list) -> list:
-    '''Return list containing elements, which appears in the equation.
+    '''Return list containing all elements that appears in the equation.
 
-    example:
+    Example:
 
-    [['Na', 'Cl'], ['H2', 'S', 'O4'], ['Na', 'H', 'S', 'O4'], ['H', 'Cl']] -> ['Na', 'H', 'C', 'O', 'Cl']
+    getElementsOfEquation([['Na', 'Cl'], ['H2', 'S', 'O4'], ['Na', 'H', 'S', 'O4'], ['H', 'Cl']]) -> ['Na', 'H', 'C', 'O', 'Cl']
     '''
     elements = []
     for molecule in equation:
@@ -70,7 +73,7 @@ def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list
             for item in equation[i]:
                 if item[:len(element)] == element:
                     if item[len(element):]:
-                        # this if make sure, that the element is really the same as the item, for example Cl starts with C, but its not the same...
+                        # this "if" makes sure, that the element is really the same as the item, for example Cl starts with C, but its not the same...
                         if ord(item[len(element)]) not in lowerCaseAlphabet:
                             count += int(item[len(element):])
                     else:
