@@ -16,13 +16,14 @@ def calcStoichCoeff(outputFile: str):
         elements = app.getElementsOfEquation(equation)
         matrix_of_equation = app.createMatrixOfChemEquation(left_side, right_side, elements)
 
-        ut_matrix, parameters_count = app.gauss(matrix_of_equation)
-        roots = app.backSubst(ut_matrix, parameters_count)
+        ut_matrix = app.gauss(matrix_of_equation)
+        roots = app.backSubst(ut_matrix)
+        integer_roots = app.balanceCoefficients(roots)
 
         output_line = ''
         for i in range(len(equation)):
-            if roots[i] > 0:
-                molecule = str(roots[i])
+            if integer_roots[i] > 1:
+                molecule = str(integer_roots[i])
             else:
                 molecule = ''
             for j in range(len(equation[i])):

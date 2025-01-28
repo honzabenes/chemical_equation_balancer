@@ -1,5 +1,6 @@
 
 import re
+from fractions import Fraction
 
 # patterns used for parsing the input
 PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
@@ -19,6 +20,7 @@ def getSideOfEquation(side: bool, equation: str) -> list:
         index = 0
     elif side == False:
         index = 1
+
     return [molecule.strip() for molecule in equation.split('=')[index].split('+')]
 
 
@@ -33,7 +35,9 @@ def formatSideOfEquation(side: list) -> list:
     for item in side:
         molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
         formattedSide.append(molecule)
+
     return formattedSide
+
 
 def getElementsOfEquation(equation: list) -> list:
     '''Return list containing all elements that appears in the equation.
@@ -48,7 +52,9 @@ def getElementsOfEquation(equation: list) -> list:
             element = re.split(PATTERN_SPLIT_ELEMENTS, element)[0]
             if element not in elements:
                 elements.append(element)
+
     return elements
+
 
 # explanation of how this function works: a(KNO3) = b(KNO2) + c(O2)
 # K: 1a = 1b + 0c         K: 1a - 1b - 0c = 0        [1 -1  0]
@@ -88,25 +94,25 @@ def createMatrixOfChemEquation(left_side: list, right_side: list, elements: list
 
     return matrix
 
+
+def pivot(matrix, indexOfDiagonalZero: int) -> list:
+    '''Try to swap rows of the matrix if a zero appears on the main diagonal, if not possible, return False.'''
+    i = indexOfDiagonalZero + 1
+    while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
+        i += 1
+    if i == len(matrix):
+        return False
+    else:
+        matrix[indexOfDiagonalZero], matrix[i] = matrix[i], matrix[indexOfDiagonalZero]
+        return matrix
+
+
 def gauss(matrix) -> list:
     '''Modify the matrix and return upper triangular matrix using Gaussian elimination.'''
     
-    def pivot(matrix, indexOfDiagonalZero: int) -> list:
-        '''Try to swap rows of the matrix if a zero appears on the main diagonal, if not possible, return False.'''
-        i = indexOfDiagonalZero + 1
-        while (i < len(matrix)) and (matrix[i][indexOfDiagonalZero] == 0):
-            i += 1
-        if i == len(matrix):
-            return False
-        else:
-            matrix[indexOfDiagonalZero], matrix[i] = matrix[i], matrix[indexOfDiagonalZero]
-            return matrix
-
-    # BODY of the gauss funciton
     # function iterates over the rows only for "matrix width - 1" because there is always one parameter (stoichiometric coefficient) in the roots of each matrix that represents a chemical equation, so such a system of equations can always be modified to a system of n equations with n + 1 variables.
     unknownsCount = len(matrix[0])
     equationsCount = len(matrix)
-    parametersCount = unknownsCount - equationsCount
 
     for row in range(equationsCount):
 
@@ -124,35 +130,61 @@ def gauss(matrix) -> list:
     while equationsCount >= unknownsCount:
         matrix.pop()
         equationsCount -= 1
-    return [matrix, parametersCount]
+
+    return matrix
     
+
 # UTMatrix stands for "Upper Triangular Matrix"
-def backSubst(UTMatrix, parametersCount) -> list:
+def backSubst(UTMatrix) -> list:
     '''Return roots of the system of equations.'''
 
     WIDTH = len(UTMatrix[0])
     HEIGHT = len(UTMatrix)
+    parametersCount = WIDTH - HEIGHT
     roots = [0] * WIDTH
 
     for i in range(1, parametersCount + 1):
         roots[WIDTH - i] = 1
+        
     for i in range(HEIGHT - 1, -1, -1):
-
-        # calculating roots
         sum = 0
         for j in range(WIDTH - 1, i, -1):
             sum += UTMatrix[i][j] * roots[j]
         roots[i] = -sum / UTMatrix[i][i]
-    
-        # expanding roots to be whole numbers if they are not yet
-        # factor = 1
-        # root = roots[i]
-        # while roots[i] % 1 != 0:
-        #     roots[i] += root
-        #     factor += 1
-        # if factor > 1:
-        #     for j in range(i + 1, len(roots)):
-        #         roots[j] *= factor
-        # roots[i] = int(roots[i])
 
     return roots
+
+
+def gcd(a, b):
+    '''Find the greatest common denominator of numbers a and b.'''
+    while a != b:
+        if a > b:
+            a = a - b
+        else:
+            b = b - a
+
+    return a
+
+
+def lcm(a, b):
+    '''Find the least common multiple of numbers a and b.'''
+    return abs(a * b) // gcd(a, b)
+
+
+def lcmMultiple(numbers):
+    '''Find the least common multiple of multiple numbers.'''
+    result = lcm(numbers[0], numbers[1])
+    for i in range(2, len(numbers)):
+        result = lcm(result, numbers[i])
+
+    return result
+    
+
+def balanceCoefficients(coefficients: list) -> list:
+    """Balance the chemical coefficients so that they are whole."""
+    fractions = [Fraction(c).limit_denominator() for c in coefficients]
+    denominators = [frac.denominator for frac in fractions]
+    commonDenominator = lcmMultiple(denominators)
+    integerCoefficients = [int(frac * commonDenominator) for frac in fractions]
+
+    return integerCoefficients
