@@ -6,6 +6,7 @@ def calcStoichCoeff(outputFile: str):
     '''Read chemical equations from the input file and write enumerated equations with stoichiometric coefficients into the output file.'''
     output_lines = []
 
+    #line = sys.stdin.read()
     for line in sys.stdin:
 
         left_side = app.formatSideOfEquation(app.getSideOfEquation(True, line))
@@ -15,12 +16,12 @@ def calcStoichCoeff(outputFile: str):
         elements = app.getElementsOfEquation(equation)
         matrix_of_equation = app.createMatrixOfChemEquation(left_side, right_side, elements)
 
-        ut_matrix = app.gauss(matrix_of_equation)
-        roots = app.backSubst(ut_matrix)
+        ut_matrix, parameters_count = app.gauss(matrix_of_equation)
+        roots = app.backSubst(ut_matrix, parameters_count)
 
         output_line = ''
         for i in range(len(equation)):
-            if roots[i] > 1:
+            if roots[i] > 0:
                 molecule = str(roots[i])
             else:
                 molecule = ''

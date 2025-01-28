@@ -5,7 +5,7 @@ import re
 PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
 PATTERN_SPLIT_ELEMENTS = r'(?=\d)'
 
-def getSideOfEquation(side: str, equation: str) -> list:
+def getSideOfEquation(side: bool, equation: str) -> list:
     '''Return list of strings, which contains all molecules in the wanted side of the equation.
 
     "Side" argument:
@@ -104,31 +104,38 @@ def gauss(matrix) -> list:
 
     # BODY of the gauss funciton
     # function iterates over the rows only for "matrix width - 1" because there is always one parameter (stoichiometric coefficient) in the roots of each matrix that represents a chemical equation, so such a system of equations can always be modified to a system of n equations with n + 1 variables.
-    for row in range(len(matrix[0]) - 1):
+    unknownsCount = len(matrix[0])
+    equationsCount = len(matrix)
+    parametersCount = unknownsCount - equationsCount
 
-        if (matrix[row][row] == 0):
+    for row in range(equationsCount):
+
+        if (matrix[row][row] == 0) and (row != equationsCount - 1):
             matrix = pivot(matrix, row)
             if not matrix:
                 return False
             
-        for j in range(row + 1, len(matrix)):
+        for j in range(row + 1, equationsCount):
             factor = - matrix[j][row] / matrix[row][row]
-            for column in range(row, len(matrix[0])):
+            for column in range(row, unknownsCount):
                 matrix[j][column] += matrix[row][column] * factor
     
     # remove zero-lines
-    while len(matrix) >= len(matrix[0]):
+    while equationsCount >= unknownsCount:
         matrix.pop()
-    return matrix
+        equationsCount -= 1
+    return [matrix, parametersCount]
     
 # UTMatrix stands for "Upper Triangular Matrix"
-def backSubst(UTMatrix) -> list:
+def backSubst(UTMatrix, parametersCount) -> list:
     '''Return roots of the system of equations.'''
 
     WIDTH = len(UTMatrix[0])
     HEIGHT = len(UTMatrix)
     roots = [0] * WIDTH
-    roots[WIDTH - 1] = 1
+
+    for i in range(1, parametersCount + 1):
+        roots[WIDTH - i] = 1
     for i in range(HEIGHT - 1, -1, -1):
 
         # calculating roots
@@ -138,14 +145,14 @@ def backSubst(UTMatrix) -> list:
         roots[i] = -sum / UTMatrix[i][i]
     
         # expanding roots to be whole numbers if they are not yet
-        factor = 1
-        root = roots[i]
-        while roots[i] % 1 != 0:
-            roots[i] += root
-            factor += 1
-        if factor > 1:
-            for j in range(i + 1, len(roots)):
-                roots[j] *= factor
-        roots[i] = int(roots[i])
+        # factor = 1
+        # root = roots[i]
+        # while roots[i] % 1 != 0:
+        #     roots[i] += root
+        #     factor += 1
+        # if factor > 1:
+        #     for j in range(i + 1, len(roots)):
+        #         roots[j] *= factor
+        # roots[i] = int(roots[i])
 
     return roots
