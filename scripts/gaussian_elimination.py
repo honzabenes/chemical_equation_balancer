@@ -20,10 +20,14 @@ def gauss(matrix) -> list:
     
     unknownsCount = len(matrix[0])
     equationsCount = len(matrix)
+    parametersCount = unknownsCount - equationsCount
 
-    for row in range(equationsCount):
+    if parametersCount > 1:   # gaussian elimination cannot resolve chemical equation when there is more than 1 parameter
+        return False
 
-        if (matrix[row][row] == 0) and (row != equationsCount - 1):
+    for row in range(unknownsCount - 1):
+
+        if  (matrix[row][row] == 0):
             pivottedMatrix = pivot(matrix, row)
 
             if pivottedMatrix:  # function "pivot" found row to swap

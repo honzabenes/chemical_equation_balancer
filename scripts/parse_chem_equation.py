@@ -2,6 +2,9 @@
 import re
 
 # patterns used for parsing the input
+PATTERN_REMOVE_SQUARE_BRACKETS = r'\[|\]'
+PATTERN_SPLIT_PARENTHESES = r'\(.*?\)\d*'
+PATTERN_EXTRACT_FUNC_GROUP = r'\((.*?)\)'
 PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
 PATTERN_SPLIT_ELEMENTS = r'(?=\d)'
 
@@ -31,10 +34,27 @@ def formatSideOfEquation(side: list) -> list:
     formatSideOfEquation(['NaCl', 'H2SO4']) -> [['Na', 'Cl'], ['H2', 'S', 'O4']]
     '''
     formattedSide = []
-    
+
+    for molecule in range(len(side)):
+        side[molecule] = re.sub(PATTERN_REMOVE_SQUARE_BRACKETS, '', side[molecule])
+
     for item in side:
-        molecule = [element for element in re.split(PATTERN_SPLIT_MOLECULES, item) if element]
-        formattedSide.append(molecule)
+
+        if '(' in item:
+            funcGroup = re.search(PATTERN_SPLIT_PARENTHESES, item).group()
+            rBrcktIndex = funcGroup.index(')')
+            funcGroupCount = int(funcGroup[rBrcktIndex + 1 :])
+            funcGroup = re.search(PATTERN_EXTRACT_FUNC_GROUP, funcGroup).group(1)
+
+            expandedGroup = ''
+            for element in re.findall(r'[A-Z][a-z]?\d*', funcGroup):
+                elementSymbol = re.match(r'[A-Z][a-z]?', element).group()
+                elementCount = int(re.search(r'\d+', element).group()) if re.search(r'\d+', element) else 1
+                expandedGroup += elementSymbol + str(elementCount * funcGroupCount)
+            
+            item = item.replace(f'({funcGroup}){funcGroupCount}', expandedGroup)
+
+        formattedSide.append(re.findall(r'[A-Z][a-z]?\d*', item))
 
     return formattedSide
 

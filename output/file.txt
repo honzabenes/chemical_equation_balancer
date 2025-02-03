@@ -1,5 +1,6 @@
-Error: cannot calculate this, enumeration leads to the system of equations with too many free unknowns
-3Cl2 + 6NaOH = 5NaCl + NaClO3 + 3H2O
+Error: cannot calculate this chemical equation
+Fe2(SO4)3 + 6NaOH = 2Fe(OH)3 + 3Na2SO4
+3[Cl]2 + 6NaOH = 5NaCl + NaClO3 + 3H2O
 C3H8 + 5O2 = 3CO2 + 4H2O
 H2SO4 + 2NaOH = Na2SO4 + 2H2O
 2Na + 2H2O = 2NaOH + H2

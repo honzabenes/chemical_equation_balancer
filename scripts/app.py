@@ -26,12 +26,18 @@ def calcStoichCoeff(outputFile: str):
         ut_matrix = ge.gauss(matrix_of_equation)
 
         if ut_matrix == False:
-            output_line = 'Error: this chemical equation doesnt have a solution'
+            output_line = 'Error: cannot calculate this chemical equation'
+            output_line += '\n'
+            output_lines.append(output_line)
+            continue
         
         roots = ge.backSubst(ut_matrix)   # roots are the stoichometric coefficients
 
         if roots == False:
-            output_line = 'Error: cannot calculate this, enumeration leads to the system of equations with too many free unknowns'
+            output_line = 'Error: cannot calculate this chemical equation'
+            output_line += '\n'
+            output_lines.append(output_line)
+            continue
 
         if len(output_line) == 0:
             integer_roots = ge.balanceCoefficients(roots)
@@ -55,7 +61,6 @@ def calcStoichCoeff(outputFile: str):
                         output_line += ' = '
 
         output_line += '\n'
-
         output_lines.append(output_line)
 
 
