@@ -41,15 +41,15 @@ def formatSideOfEquation(side: list) -> list:
     for item in side:
 
         if '(' in item:
-            funcGroup = re.search(PATTERN_SPLIT_PARENTHESES, item).group()
+            funcGroup = re.search(PATTERN_SPLIT_PARENTHESES, item).group()   # get the whole function group
             rBrcktIndex = funcGroup.index(')')
-            funcGroupCount = int(funcGroup[rBrcktIndex + 1 :])
-            funcGroup = re.search(PATTERN_EXTRACT_FUNC_GROUP, funcGroup).group(1)
+            funcGroupCount = int(funcGroup[rBrcktIndex + 1 :])   # get the count of the function group
+            funcGroup = re.search(PATTERN_EXTRACT_FUNC_GROUP, funcGroup).group(1)   # get the function group without parentheses and count
 
             expandedGroup = ''
-            for element in re.findall(r'[A-Z][a-z]?\d*', funcGroup):
+            for element in re.findall(r'[A-Z][a-z]?\d*', funcGroup):   # divide the function group into elements with their counts
                 elementSymbol = re.match(r'[A-Z][a-z]?', element).group()
-                elementCount = int(re.search(r'\d+', element).group()) if re.search(r'\d+', element) else 1
+                elementCount = int(re.search(r'\d+', element).group()) if re.search(r'\d+', element) else 1   # get the count of the element if there is any, otherwise set it to 1
                 expandedGroup += elementSymbol + str(elementCount * funcGroupCount)
             
             item = item.replace(f'({funcGroup}){funcGroupCount}', expandedGroup)

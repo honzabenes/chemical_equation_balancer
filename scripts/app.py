@@ -3,6 +3,11 @@ import sys
 import parse_chem_equation as pce
 import gaussian_elimination as ge
 
+def writeCalcError(outputLines: list):
+    output_line = 'Error: cannot calculate this chemical equation'
+    output_line += '\n'
+    outputLines.append(output_line)
+
 def calcStoichCoeff(outputFile: str):
     '''Read chemical equations from the input file and write enumerated equations with stoichiometric coefficients into the output file.'''
     output_lines = []
@@ -24,19 +29,13 @@ def calcStoichCoeff(outputFile: str):
         matrix_of_equation = pce.createMatrixOfChemEquation(frmt_left_side, frmt_right_side, elements)
 
         ut_matrix = ge.gauss(matrix_of_equation)
-
         if ut_matrix == False:
-            output_line = 'Error: cannot calculate this chemical equation'
-            output_line += '\n'
-            output_lines.append(output_line)
+            writeCalcError(output_lines)
             continue
         
         roots = ge.backSubst(ut_matrix)   # roots are the stoichometric coefficients
-
         if roots == False:
-            output_line = 'Error: cannot calculate this chemical equation'
-            output_line += '\n'
-            output_lines.append(output_line)
+            writeCalcError(output_lines)
             continue
 
         if len(output_line) == 0:
@@ -49,7 +48,6 @@ def calcStoichCoeff(outputFile: str):
                     molecule = str(integer_roots[i])
 
                 molecule += equation[i]   # add the rest of the molecule
-
                 output_line += molecule
 
                 if i < len(equation) - 1:
