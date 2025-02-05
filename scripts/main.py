@@ -7,7 +7,7 @@
 '''
 
 # path in cmd: cd programovani/zapoctovy_program/chemistry/git_repo/zapoctovy_program
-# run command: cat input/file.txt | python scripts/main.py
+# run command: cat input/test_data.txt | python scripts/main.py
 
 import app
 
