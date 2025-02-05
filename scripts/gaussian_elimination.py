@@ -50,13 +50,8 @@ def gauss(matrix) -> list:
 # UTMatrix stands for "Upper Triangular Matrix"
 def backSubst(UTMatrix) -> list:
     '''Return roots of the system of equations.'''
-
     WIDTH = len(UTMatrix[0])
     HEIGHT = len(UTMatrix)
-    parametersCount = WIDTH - HEIGHT
-
-    if parametersCount > 1:   # gaussian elimination cannot resolve chemical equation when there is more than 1 parameter
-        return False
 
     roots = [0] * WIDTH
 

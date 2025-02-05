@@ -1,5 +1,4 @@
 Error: cannot calculate this chemical equation
-Fe2(SO4)3 + 6NaOH = 2Fe(OH)3 + 3Na2SO4
 3Cl2 + 6NaOH = 5NaCl + NaClO3 + 3H2O
 C3H8 + 5O2 = 3CO2 + 4H2O
 H2SO4 + 2NaOH = Na2SO4 + 2H2O
@@ -7,7 +6,6 @@ H2SO4 + 2NaOH = Na2SO4 + 2H2O
 CH4 + 2O2 = CO2 + 2H2O
 Fe + 2HCl = FeCl2 + H2
 2H2O2 = 2H2O + O2
-2Al + 3Cl2 = 2AlCl3
 S + O2 = SO2
 CO2 + 2NaOH = Na2CO3 + H2O
 2H2 + O2 = 2H2O
@@ -50,3 +48,18 @@ Zn + 2HCl = ZnCl2 + H2
 MnO2 + 4HCl = MnCl2 + Cl2 + 2H2O
 4NH3 + 5O2 = 4NO + 6H2O
 2KClO3 = 2KCl + 3O2
+ZnCO3 + 2HCl = ZnCl2 + H2O + CO2
+Fe2(SO4)3 + 6NaOH = 2Fe(OH)3 + 3Na2SO4
+Ca(OH)2 + CO2 = CaCO3 + H2O
+(NH4)2SO4 + BaCl2 = 2NH4Cl + BaSO4
+Al2(SO4)3 + 6NaOH = 2Al(OH)3 + 3Na2SO4
+Na2CO3 + 2HCl = 2NaCl + H2O + CO2
+Cu(OH)2 + H2SO4 = CuSO4 + 2H2O
+Pb(NO3)2 + 2KI = PbI2 + 2KNO3
+K2Cr2O7 + 14HCl = 2CrCl3 + 3Cl2 + 7H2O + 2KCl
+Mg(OH)2 + 2HNO3 = Mg(NO3)2 + 2H2O
+Error: syntax error on this line
+2Al + 3Cl2 = 2AlCl3
+Error: syntax error on this line
+Error: syntax error on this line
+Error: syntax error on this line

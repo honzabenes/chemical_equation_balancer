@@ -2,7 +2,6 @@
 import re
 
 # patterns used for parsing the input
-PATTERN_REMOVE_SQUARE_BRACKETS = r'\[|\]'
 PATTERN_SPLIT_PARENTHESES = r'\(.*?\)\d*'
 PATTERN_EXTRACT_FUNC_GROUP = r'\((.*?)\)'
 PATTERN_SPLIT_MOLECULES = r'(?=[A-Z][a-z]*\d*)'
@@ -34,10 +33,7 @@ def formatSideOfEquation(side: list) -> list:
     formatSideOfEquation(['NaCl', 'H2SO4']) -> [['Na', 'Cl'], ['H2', 'S', 'O4']]
     '''
     formattedSide = []
-
-    for molecule in range(len(side)):
-        side[molecule] = re.sub(PATTERN_REMOVE_SQUARE_BRACKETS, '', side[molecule])
-
+    
     for item in side:
 
         if '(' in item:

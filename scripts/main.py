@@ -5,5 +5,4 @@
 import app
 
 if __name__ == '__main__':
-    app.calcStoichCoeff('output/file.txt')
-
+    app.getOuput('output/file.txt')
